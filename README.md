@@ -235,20 +235,27 @@ obj.instance_eval { @v } # => 2
 ### `instance_exec` 은 parameter를 넘겨줄 수 있음.
 `instance_eval` 로 해결할 수 없는 경우
 ```ruby
-class C def initialize
-@x = 1
-end end
-class D def twisted_method
-@y = 2
-C.new.instance_eval { "@x: #{@x}, @y: #{@y}" } end
+class C
+  def initialize
+    @x = 1
+  end
+end
+
+class D
+  def twisted_method
+    @y = 2
+    C.new.instance_eval { "@x: #{@x}, @y: #{@y}" }
+  end
 end
 D.new.twisted_method # => "@x: 1, @y: "
 ```
-`instance_eval` 은 self를 바꾸기 때문에 block이라 하더라도 이전 scope의 instance variable에는 접근할 수 없다. 이 때 `instance_exec`을 사용해서 해결할 수 있다.
+`instance_eval` 은 self를 바꾸기 때문에 block이라 하더라도 이전 scope의 instance variable에는 접근할 수 없다. 이 때 `instance_exec`을 사용하면 parameter를 넘겨주는 방법으로 해결할 수 있다.
 ```ruby
-class D def twisted_method
-@y = 2
-C.new.instance_exec(@y) {|y| "@x: #{@x}, @y: #{y}" } end
+class D
+  def twisted_method
+    @y = 2
+    C.new.instance_exec(@y) {|y| "@x: #{@x}, @y: #{y}" }
+  end
 end
 D.new.twisted_method # => "@x: 1, @y: 2"
 ```
